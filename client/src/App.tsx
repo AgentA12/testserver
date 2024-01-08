@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
+  function fetchData() {
+    fetch("http://localhost:3000", {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      // mode: "cors", // no-cors, *cors, same-origin
+      // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      // credentials: "same-origin", // include, *same-origin, omit
+      // headers: {
+      //   "Content-Type": "application/json",
+      //   // 'Content-Type': 'application/x-www-form-urlencoded',
+      // },
+      // redirect: "follow", // manual, *follow, error
+      // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      // body: JSON.stringify(data), // body data type must match "Content-Type" header
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setData(data.Response);
+      })
+      .catch((err: any) => {
+        console.log(err);
+        setError(err);
+      });
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <section
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 50,
+        alignItems: "center",
+      }}
+    >
+      <button style={{ width: "fit-content" }} onClick={fetchData}>
+        Send GET request
+      </button>
 
-export default App
+      {data ? (
+        <p style={{ color: "wheat" }}> {data}</p>
+      ) : (
+        <p style={{ color: "wheat" }}>{error}</p>
+      )}
+    </section>
+  );
+};
+
+export default App;
